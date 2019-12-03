@@ -15,8 +15,8 @@ after_success:
   - docker build -t yanivillouz/multi-worker ./worker
   
   # Log in to docker CLI
+  - echo pushing into docker
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # Take images and push to coker     
   - docker push yanivillouz/multi-client
   - docker push yanivillouz/multi-nginx
   - docker push yanivillouz/multi-server
