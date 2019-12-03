@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t yanivillouz/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run yanivillouz/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t yanivillouz/multi-client ./client
+  - docker build -t yanivillouz/multi-nginx ./nginx
+  - docker build -t yanivillouz/multi-server ./server
+  - docker build -t yanivillouz/multi-worker ./worker
+  
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take images and push to coker     
+  - docker push yanivillouz/multi-client
+  - docker push yanivillouz/multi-nginx
+  - docker push yanivillouz/multi-server
+  - docker push yanivillouz/multi-worker
